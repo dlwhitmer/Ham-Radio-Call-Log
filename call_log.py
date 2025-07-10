@@ -21,6 +21,13 @@ class HamLog(QMainWindow):
         font = QFont("Arial",25)
         font.setBold(True)
           
+        #Title
+        title_layout = QHBoxLayout()
+        self.title = QLabel("WB3JWL Call Log")
+        self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.title.setFixedSize(400,50)
+        self.title.setStyleSheet(" background-color: #000;color: #f8cc1b; font-size: 40px; font-weight: 700; border-radius: 20px;")
+        title_layout.addWidget(self.title, alignment=(Qt.AlignmentFlag.AlignCenter))
 
         # Input fields
         input_layout = QHBoxLayout()
@@ -31,60 +38,66 @@ class HamLog(QMainWindow):
         self.time_stamp_input.setPlaceholderText("Time Stamp")
         self.callsign_input = QLineEdit()
         self.callsign_input.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.callsign_input.setFixedSize(150,40)
+        self.callsign_input.setFixedSize(200,40)
         self.callsign_input.setStyleSheet("background-color:#adc178; font-size: 18px; font-weight: 800;")
         self.callsign_input.setPlaceholderText("Callsign")
         self.frequency_input = QLineEdit()
         self.frequency_input.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.frequency_input.setFixedSize(150,40)
+        self.frequency_input.setFixedSize(200,40)
         self.frequency_input.setStyleSheet("background-color:#adc178; font-size: 18px; font-weight: 800;")
         self.frequency_input.setPlaceholderText("Frequency")
         self.mode_input = QLineEdit()
         self.mode_input.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.mode_input.setFixedSize(150,40)
+        self.mode_input.setFixedSize(200,40)
         self.mode_input.setStyleSheet("background-color:#adc178; font-size: 18px; font-weight: 800;")
         self.mode_input.setPlaceholderText("Mode")
-        self.notes_input = QLineEdit()
-        self.notes_input.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.notes_input.setFixedSize(500,40)
-        self.notes_input.setStyleSheet("background-color:#adc178; font-size: 18px; font-weight: 800;")
-        self.notes_input.setPlaceholderText("Notes")
+        self.location_input = QLineEdit()
+        self.location_input.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.location_input.setFixedSize(300,40)
+        self.location_input.setStyleSheet("background-color:#adc178; font-size: 18px; font-weight: 800;")
+        self.location_input.setPlaceholderText("Location")
         input_layout.addWidget(self.time_stamp_input)
         input_layout.addWidget(self.callsign_input)
         input_layout.addWidget(self.frequency_input)
         input_layout.addWidget(self.mode_input)
-        input_layout.addWidget(self.notes_input)
+        input_layout.addWidget(self.location_input)
 
         button_layout = QHBoxLayout()
+        button_layout.setAlignment(Qt.AlignmentFlag.AlignJustify)
         self.add_button = QPushButton("Add To Log")
+        self.add_button.setFixedSize(200,40)
+        self.add_button.setStyleSheet("background-color: #000; font-size: 22px; font-weight: 700; border-radius: 15px; color:#ffa600;")
         self.add_button.clicked.connect(self.add_entry)
         self.save_button = QPushButton("Save Log")
+        self.save_button.setFixedSize(200,40)
+        self.save_button.setStyleSheet("background-color: #000; font-size: 22px; font-weight: 700; border-radius: 15px; color:#ffa600;")
         self.save_button.clicked.connect(self.save_log)
         self.load_button = QPushButton("Load Log")
+        self.load_button.setFixedSize(200,40)
+        self.load_button.setStyleSheet("background-color: #000; font-size: 22px; font-weight: 700; border-radius: 15px; color:#ffa600;")
         self.load_button.clicked.connect(self.load_log)
         button_layout.addWidget(self.add_button)
         button_layout.addWidget(self.save_button)
         button_layout.addWidget(self.load_button)
 
         
-
+        table_layout = QHBoxLayout()
         self.table = QTableWidget()
-        self.table.setStyleSheet("background-color: #f0ead2;")
+        table_layout.addWidget(self.table)
+        self.table.setStyleSheet("background-color: #f0ead2; font-family: Arial; font-size: 18px; font-weight: 800; background-color:#f0ead2;border: 2px solid #000; color:#000;")
         self.table.setColumnCount(5)
         self.table.setColumnWidth(0, 200)
-        self.table.setColumnWidth(1, 150)
-        self.table.setColumnWidth(2, 150)
-        self.table.setColumnWidth(3, 150)
-        self.table.setColumnWidth(4, 500)
-        self.table.setHorizontalHeaderLabels(["Time Stamp","Callsign", "Frequency", "Mode", "Notes"])
-        self.table.setStyleSheet("font-family: Arial; font-size: 18px; font-weight: 800; background-color:#f0ead2;border: 2px solid #000;")
-       
-
+        self.table.setColumnWidth(1, 200)
+        self.table.setColumnWidth(2, 200)
+        self.table.setColumnWidth(3, 200)
+        self.table.setColumnWidth(4, 300)
+        self.table.setHorizontalHeaderLabels(["Time Stamp","Callsign", "Frequency", "Mode", "Location"])
 
         # Add widgets to layout
+        layout.addLayout(title_layout)
         layout.addLayout(input_layout)
         layout.addLayout(button_layout)
-        layout.addWidget(self.table)
+        layout.addLayout(table_layout)
 
         # Set central widget
         container = QWidget()
@@ -93,11 +106,11 @@ class HamLog(QMainWindow):
 
 
     def add_entry(self):
-        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        time = datetime.now().strftime("%Y-%m-%d %H:%M")
         callsign = self.callsign_input.text().upper()
         frequency = self.frequency_input.text().upper()
         mode = self.mode_input.text().upper()
-        notes = self.notes_input.text().upper()
+        location = self.location_input.text().upper()
 
         if time and callsign and frequency and mode :
             row_position = self.table.rowCount()
@@ -106,25 +119,27 @@ class HamLog(QMainWindow):
             self.table.setItem(row_position, 1, QTableWidgetItem(callsign))
             self.table.setItem(row_position, 2, QTableWidgetItem(frequency))
             self.table.setItem(row_position, 3, QTableWidgetItem(mode))
-            self.table.setItem(row_position, 4, QTableWidgetItem(notes))
+            self.table.setItem(row_position, 4, QTableWidgetItem(location))
 
             # Clear input fields
             self.time_stamp_input.clear()
             self.callsign_input.clear()
             self.frequency_input.clear()
             self.mode_input.clear()
-            self.notes_input.clear()
+            self.location_input.clear()
     def save_log(self):
         path, _ = QFileDialog.getSaveFileName(self, "Save Log", "", "CSV Files (*.csv)")
         if path:
             with open(path, mode='w', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow(["Time Stamp", "Callsign", "Frequency", "Mode", "Notes"])
+                writer.writerow(["Time Stamp", "Callsign", "Frequency", "Mode", "Location"])
                 for row in range(self.table.rowCount()):
                     writer.writerow([
                         self.table.item(row, 0).text(),
                         self.table.item(row, 1).text(),
-                        self.table.item(row, 2).text()
+                        self.table.item(row, 2).text(),
+                        self.table.item(row, 3).text(),
+                        self.table.item(row, 4).text()
                     ])
 
     def load_log(self):
