@@ -54,15 +54,10 @@ class HamCallLog(QMainWindow):
         layout = QVBoxLayout(central_widget)
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
-        self.setStyleSheet("""
-            QMainWindow {
-                background-image: url('brushednickel-2.jpg');
-                background-repeat: no-repeat;
-                background-position: center;
-                background-attachment: cover;
-                           
-            }
-        """)
+        palette = QPalette()
+        pixmap = QPixmap("brushednickel-2.jpg")  # Replace with your image path
+        palette.setBrush(QPalette.ColorRole.Window, QBrush(pixmap))
+        self.setPalette(palette)
 
         menu_bar = self.menuBar()
         font = menu_bar.font()
